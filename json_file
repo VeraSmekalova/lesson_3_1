@@ -1,0 +1,54 @@
+import json
+from pprint import pprint
+from typing import Set, Any
+
+news_list = list()
+words = list()
+long_word = list()
+word_set = set()
+word_dict = dict()
+reference = list()
+q_list = list()
+top = 0
+
+
+with open('newsafr.json', encoding='utf-8') as file:
+    json_data = json.load(file)
+    # print(json_data)
+    # print(json_data.keys())
+    for i in json_data['rss']['channel']['items']:
+        # print(i)
+        for key in i:
+            if key == 'description':
+                news_list.append(i['description'])
+                # print(news_list)
+    # pprint(len(news_list))
+    # pprint(json_data)
+    for new in news_list:
+        # print(new)
+        words.append(new.split(' '))
+    # print(words)
+    for part in words:
+        for word in part:
+            if len(word) > 6:
+            
+                long_word.append(word)
+    print(long_word)
+    word_set = set(long_word)
+    # pprint(long_word)
+    for i in word_set:
+        quontity_i = long_word.count(i)
+        # print(quontity_i)
+        word_dict.setdefault(quontity_i, list())
+        word_dict[quontity_i].append(i)
+    for key in word_dict:
+        q_list.append(key)
+    q_list.sort()
+    q_list.reverse()
+
+    print('Топ 10 самых часто встречающихся слов длиной выше 6 символов в новостях Африки:')
+    for i in q_list:
+        top += len(word_dict[i])
+        print('слово {} встречается {} раз'.format(str(word_dict[i]), i))
+        if top > 10:
+            break
